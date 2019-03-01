@@ -1,0 +1,242 @@
+﻿<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition">
+	<dd:Name xmlns:dd="http://schemas.datadynamics.com/reporting/2005/02/reportdefinition">classmate.rdlx</dd:Name>
+	<Body>
+		<Height>25.7cm</Height>
+		<ReportItems>
+			<FixedPage Name="FixedPage1">
+				<Pages>
+					<Page>
+						<ReportItems>
+							<Table Name="Table1">
+								<DataSetName>DataSet1</DataSetName>
+								<Header>
+									<TableRows>
+										<TableRow>
+											<Height>0.732015cm</Height>
+											<TableCells>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox1">
+															<Value>class</Value>
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+																<TextAlign>Right</TextAlign>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox2">
+															<Value>名前</Value>
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox3">
+															<Value>学年</Value>
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+											</TableCells>
+										</TableRow>
+									</TableRows>
+								</Header>
+								<Details>
+									<TableRows>
+										<TableRow>
+											<Height>0.732015cm</Height>
+											<TableCells>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox4">
+															<Value>=Fields!class.Value</Value>
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+																<TextAlign>Right</TextAlign>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox5">
+															<Value>=Fields!Name.Value</Value>
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox6">
+															<Value>=ClassGrade(Fields!class.Value)</Value>
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+											</TableCells>
+										</TableRow>
+									</TableRows>
+								</Details>
+								<Footer>
+									<TableRows>
+										<TableRow>
+											<Height>0.732015cm</Height>
+											<TableCells>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox7">
+															<Value />
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox8">
+															<Value />
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+												<TableCell>
+													<ReportItems>
+														<Textbox Name="TextBox9">
+															<Value />
+															<Style>
+																<PaddingBottom>2pt</PaddingBottom>
+																<PaddingLeft>2pt</PaddingLeft>
+																<PaddingRight>2pt</PaddingRight>
+																<PaddingTop>2pt</PaddingTop>
+															</Style>
+														</Textbox>
+													</ReportItems>
+												</TableCell>
+											</TableCells>
+										</TableRow>
+									</TableRows>
+								</Footer>
+								<Height>2.2cm</Height>
+								<Left>1cm</Left>
+								<dd:FixedHeight xmlns:dd="http://schemas.datadynamics.com/reporting/2005/02/reportdefinition">4.8cm</dd:FixedHeight>
+								<dd:FixedWidth xmlns:dd="http://schemas.datadynamics.com/reporting/2005/02/reportdefinition">10.99458cm</dd:FixedWidth>
+								<Style />
+								<TableColumns>
+									<TableColumn>
+										<Width>3.466042cm</Width>
+									</TableColumn>
+									<TableColumn>
+										<Width>3.466042cm</Width>
+									</TableColumn>
+									<TableColumn>
+										<Width>3.466042cm</Width>
+									</TableColumn>
+								</TableColumns>
+								<Top>1cm</Top>
+								<Width>10.4cm</Width>
+								<ZIndex>1</ZIndex>
+							</Table>
+						</ReportItems>
+						<Style />
+					</Page>
+				</Pages>
+				<DataSetName>DataSet1</DataSetName>
+			</FixedPage>
+		</ReportItems>
+		<Style />
+	</Body>
+	<BottomMargin>2.5cm</BottomMargin>
+	<Code>Public Function GetDueDate() as Date
+	Return DateTime.Now.AddDays(30)
+End Function
+
+Public Function ClassGrade(value As Integer) As String
+	Dim grade As String
+	
+	Select Case value
+		Case 7
+			grade = "中1"
+		Case 4
+			grade = "小4"
+		Case 2
+			grade = "小2"
+		Case Else
+			grade = "不明"
+	End Select
+	
+	Return grade
+	
+End Function</Code>
+	<LeftMargin>2.5cm</LeftMargin>
+	<PageHeight>25.7cm</PageHeight>
+	<PageWidth>18.2cm</PageWidth>
+	<RightMargin>2.5cm</RightMargin>
+	<TopMargin>2.5cm</TopMargin>
+	<Width>18.2cm</Width>
+	<DataSources>
+		<DataSource Name="DataSource1">
+			<ConnectionProperties>
+				<ConnectString>DRIVER={SQLite3 ODBC Driver};Database=%USERPROFILE%\source\repos\ClassMate\ClassMate\classmate.sqlite3;</ConnectString>
+				<DataProvider>ODBC</DataProvider>
+			</ConnectionProperties>
+		</DataSource>
+	</DataSources>
+	<DataSets>
+		<DataSet Name="DataSet1">
+			<Fields>
+				<Field Name="ID">
+					<DataField>ID</DataField>
+				</Field>
+				<Field Name="Name">
+					<DataField>Name</DataField>
+				</Field>
+				<Field Name="class">
+					<DataField>class</DataField>
+				</Field>
+			</Fields>
+			<Query>
+				<CommandText>select * from classmate</CommandText>
+				<DataSourceName>DataSource1</DataSourceName>
+			</Query>
+		</DataSet>
+	</DataSets>
+</Report>

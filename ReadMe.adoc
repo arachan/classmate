@@ -1,0 +1,440 @@
+= Active Reports Designerで帳票設計してVB.NETに組み込む
+
+帳票設計はGUIの帳票設計ツールで作ったほうが効率がいい。
+
+Visual StudioにReports Designerで設計した帳票を取り込んで使えれば効率よく帳票を作成できるのではないでしょうか？
+
+ActiveReportsにはアンバウンドデータソースという方法があります。
+
+ActiveReportsで作ったレポートにDataTableでデータを渡す方法です。
+
+これを使えばできます。
+
+下記に簡単な手順を示します。
+
+*簡単な手順*
+
+1. Reports Designerで帳票設計
+2. データソースはODBCでもOLE DBでも問わない
+3. 帳票のデータソースをDataSet Providerに変更して保存
+4. Visual Studioのプロジェクトに帳票を取り込む
+5. Visual Studio上でDataTableを渡すプログラムを作る
+6. 表示
+
+説明するためにClassMateというSampleプログラムを作りました。
+GitHubに置いておきます。
+
+== classmate
+
+ClassMateの一覧を表示するレポート。
+
+SQLiteで作成されたclassmateを呼び込みます。
+
+
+=== 環境
+
+- Windows 10 Home/Pro
+- SQLite ODBC Driver (32bit)
+- ActiveReports Designer v12 (体験版でも可)
+- Visual Studio 2017 Professional (Community Editionでも可)
+
+==== あると便利なもの
+
+- DB Browser for SQLite
+
+=== 予め作成
+
+==== ClassMateソリューション作成
+1. Visual Studioで「ActiveReports 12J ページレポートアプリケーションを作成」
+2. ソリューション名を ClassMateとする
+
+==== classmate.sqlite3を作成
+1. DB Browser for SQLiteでClassMateソリューションフォルダ直下にclassmate.sqlite3というDatabaseを作成
+ 
+ %USERPROFILE%\source\repos\ClassMate\ClassMate
+ 
+2. 下記のTableを作成
+
+```
+CREATE TABLE "classmate" (
+	"ID"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"Name"	TEXT,
+	"class"	INTEGER
+);
+
+```
+
+[options="header"]
+|================
+|ID|Name|class
+|1|Tomas|7
+|2|John|2
+|3|Kate|4
+|================
+
+=== classmate.rdlxの作成
+1. Active Reports Designerを起動
+2. classmate.rdlxという名前で保存します。
+
+=== DataSourceとフィールドの作成
+
+1. レポートエクスプローラーのデータソースを右クリック > データソース追加
+2. レポートデータソースのウインドウで下記の通りに設定
+
+ 名前：DataSource1
+ 種類：Microsoft Odbc Provider
+ 接続：接続文字列：
+ DRIVER={SQLite3 ODBC Driver};Database=%USERPROFILE%\source\repos\ClassMate\ClassMate\classmate.sqlite3;
+
+3. 作成したDataSource1を右クリック > DataSetを追加
+4. データセットウインドウでクエリを選択
+
+ 選択方法： Text
+ クエリ： select * from classmate
+ チェックボタンを押す
+
+5. フィールドを選択
+
+- ID
+- Name
+- class
+
+のフィールドが追加されていることを確認します。
+
+[OK]を押して閉じます。
+
+== レポートにフィールドを置く
+
+1. ページレポートのTableを選択してレポートにドラッグ
+2. Tableの真ん中の行の1行目のセルを選択
+3. 右側に出ているボタンを押すと差し込めるフィールドが出てきます。
+4. class,Nameと選択していきます。
+
+プレビューしてみましょう。
+一覧で表示されています。
+
+== 学年を呼ぶScriptの作成
+
+Tableの右端のヘッダー部分に学年と入力しておきます。
+
+ここに学年を呼び出すようにします。
+
+International School
+
+- Elementery 9 years
+- HighSchool 3 years
+
+日本
+
+- 小学校 6年
+- 中学   3年
+
+となっています。
+
+日本の小学校の場合に何年生であるかをスクリプトで求めることにします。
+
+スクリプト tabに下記のスクリプトを書きます。
+
+
+```vb.net:ClassGrade
+
+Public Function ClassGrade(value As Integer) As String
+	Dim grade As String
+	
+	Select Case value
+		Case 7
+			grade = "中1"
+		Case 4
+			grade = "小4"
+		Case 2
+			grade = "小2"
+		Case Else
+			grade = "不明"
+	End Select
+	
+	Return grade
+	
+End Function
+
+```
+
+Tableの一番端の行に仕掛けることにします。
+
+Tableの一番右の真ん中の行のセルを選択
+画面右端のプロパティ > Valueに以下のように入力
+
+```
+=ClassGrade(Fields!class.Value)
+```
+
+プレビューしてみましょう。
+
+学年が表示されていると思います。
+
+== アンバウンドデータ対応のレポートに変更
+
+Databaseの「Driverが64bit」しかない。
+
+といった状況化だと
+
+1. プログラム上でDataTableを生成
+2. DataTableをレポートに注入する
+
+といった方法でレポートにデータを渡してやることができます。
+
+その為にはレポートデータソースを「DataSet Provider」に変更します。
+
+=== レポートデータソースを「DataSet Provider」に変更
+
+1. レポートエクスプローラーのデータソースを右クリック > データソース追加
+2. レポートデータソースのウインドウで下記の通りに設定
+
+ 名前：DataSource1
+ 種類：DataSet Provider
+
+3. OKを押します。
+4. classmate_changedataset.rdlxという名前で保存します。
+
+classmate_changedataset.rdlxをプログラムに組み込みます。
+
+VB.netのプログラムに組み込み方はClassMateソリューションにあるReadMe.adocを参照ください。
+
+== ReportDesingerで作ったレポートを取り込む
+
+以前、classmate_changedataset.rdlxを作りました。
+
+ClassMateソリューションにclassmate_changedatset.rdlxを取り込みます。
+
+=== classmate_changedataset.rdlxを取り込む
+
+1. ClassMateソリューションを開きます。
+2. ソリューションエクスプローラーを右クリック
+3. 追加 > 既存の項目を選択
+4. classmate_changedataset.rdlx を選択
+
+ソリューションに追加されます。
+
+=== NugetでSQLite.Coreを追加
+
+1. ソリューションの参照を右クリック
+2. Nugetパッケージの追加を選択
+3. 参照を押して SQLite　を検索
+4. System.Data.SQLite.Core を選択
+5. Install
+
+== SQLiteのDatabaseを扱うClassを作成
+
+下記のClassを作成して追加しておきます。
+classDatabase.vb という名前でClassMateソリューション内で保存します。
+
+```
+Imports System.Data.SQLite
+
+
+Public Class clsssDatabase
+    ''' <summary>
+    ''' SQLiteクラス
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class classSQLite
+
+        ''' <summary>
+        ''' データベース接続文字列を設定します。
+        ''' </summary>
+        ''' <remarks></remarks>
+        Dim _ConnectString As String = ""
+        ''' <summary>
+        ''' データ取得、更新時に使用するパラメータを設定します。
+        ''' </summary>
+        ''' <remarks></remarks>
+        Dim _SqlParameters As New ArrayList
+        ''' <summary>
+        ''' 変数-コネクション
+        ''' </summary>
+        ''' <remarks></remarks>
+        Dim _SqlCn As SQLite.SQLiteConnection
+        Public Property COMMAND_TIMEOUT As Integer = 120
+
+        Public Sub New()
+            Me._ConnectString = "Data Source=" + Application.StartupPath + "\..\..\classmate.sqlite3"
+        End Sub
+
+        ''' <summary>
+        ''' 指定したSQLを実行し、その結果をDataTableオブジェクトで取得します。
+        ''' </summary>
+        ''' <param name="Query"></param>
+        ''' <returns>DataTable</returns>
+        ''' <remarks></remarks>
+        Public Function GetTableObject(ByVal Query As String) As DataTable
+
+            Dim tbl = New DataTable()
+
+            ' Connect Connection
+            Using con As New SQLiteConnection(Me._ConnectString)
+                ' Open Comand
+                Using cmd As New SQLite.SQLiteCommand(Query, con)
+                    Dim da = New SQLiteDataAdapter(cmd)
+                    ' Set Parameter
+                    For Each p In Me._SqlParameters
+                        da.SelectCommand.Parameters.Add(p)
+                    Next
+                    ' Set Data in DataTable
+                    da.Fill(tbl)
+                End Using
+            End Using
+
+            Return tbl
+
+        End Function
+
+        ''' <summary>
+        ''' パラメータをクリアします。
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Sub ParameterClear()
+            Me._SqlParameters = New ArrayList
+        End Sub
+
+
+        ''' <summary>
+        ''' パラメータを追加します。
+        ''' </summary>
+        ''' <param name="MyName">パラメータ名を設定してください。（例：@Mynameなど）</param>
+        ''' <param name="MyValue">値を設定してください。</param>
+        ''' <remarks></remarks>
+        Public Sub AddParametar(ByVal MyName As String, ByVal MyValue As Object)
+
+            Dim p As New SQLite.SQLiteParameter(MyName, MyValue)
+
+            ' パラメータを追加します。
+            Me._SqlParameters.Add(p)
+
+        End Sub
+
+        ''' <summary>
+        ''' パラメータを追加します。
+        ''' </summary>
+        ''' <param name="MyName">パラメータ名を設定してください。（例：@Mynameなど）</param>
+        ''' <param name="MyValue">値を設定してください。</param>
+        ''' <remarks></remarks>
+        Public Sub AddParametarDate(ByVal MyName As String, ByVal MyValue As Date)
+            Me._SqlParameters.Add(New SQLite.SQLiteParameter(MyName, MyValue))
+        End Sub
+
+        Public Sub Dispose()
+            ' パラメーターをクリアする
+            Me._SqlParameters.Clear()
+
+        End Sub
+
+        Public Function SqlExecute(ByVal Query As String) As Integer
+            Dim result As Integer
+
+            Using con As New SQLite.SQLiteConnection(Me._ConnectString)
+                ' Don't Forget!
+                con.Open()
+                ' Begin Transaction
+                Using trans As System.Data.Common.DbTransaction = con.BeginTransaction()
+                    Using cmd As New SQLite.SQLiteCommand(Query, con)
+                        For Each p In Me._SqlParameters
+                            cmd.Parameters.Add(p)
+                        Next
+                        cmd.CommandTimeout = COMMAND_TIMEOUT
+                        ' Execute Query Update/Insert
+                        result = cmd.ExecuteNonQuery
+                    End Using
+                    ' Commit
+                    trans.Commit()
+                End Using
+            End Using
+
+            Return result
+
+        End Function
+
+        Public Function CheckDBConnectTest_NoThrow() As Boolean
+
+            Using cn As New SQLite.SQLiteConnection(Me._ConnectString)
+                'Dim a As Integer = cn.GetActiveConnectionsCount()
+                Try
+                    ' 接続テスト
+                    'cn.Open()
+                    'cn.Close()
+
+                Catch Ex As Exception
+                    ' エラー情報を取得
+                    Return False
+                End Try
+            End Using
+
+            Return True
+
+        End Function
+
+    End Class
+End Class
+
+```
+
+== Formのソースの書き換え
+
+Formのソースを下記のように書き換える。
+
+これを実行すると動き出す。
+
+```
+Imports System.IO
+Imports GrapeCity.ActiveReports
+
+Public Class Form1
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Dim rptPath As New FileInfo("..\..\classmate_changedataset.rdlx")
+        Dim definition As New PageReport(rptPath)
+        AddHandler definition.Document.LocateDataSource, AddressOf OnLocateDataSource
+        Viewer1.LoadDocument(definition.Document)
+
+    End Sub
+    Private Sub OnLocateDataSource(ByVal sender As Object, ByVal args As LocateDataSourceEventArgs)
+        Dim db = New clsssDatabase.classSQLite
+        Dim tbl = New DataTable
+        tbl = db.GetTableObject("Select * from classmate")
+        args.Data = tbl
+    End Sub
+End Class
+
+```
+
+== 終わりに
+
+Active Reports Designerは効率よく帳票を作成することができます。
+
+Designerで作った帳票の組み込みができれば、Visual Studio上で帳票設計する必要もなくなるでしょう。
+
+帳票が多い場合はActive Report Designerに頼るべきです。
+
+== Reference
+
+https://sqlitebrowser.org/[DB Browser for SQLite]
+
+http://www.ch-werner.de/sqliteodbc/[SQLite ODBC]
+
+
+=== ActiveReports for .NET 12J Help
+
+https://docs.grapecity.com/help/activereports-12/#BindPageReportstoaData%20Source.html[ActiveReports v12J データソース]
+
+https://docs.grapecity.com/help/activereports-12/#ConnecttoaDataSource.html[DataSourceの接続]
+
+https://docs.grapecity.com/help/activereports-12/#AddaDataset.html[DataSetの追加]
+
+https://docs.grapecity.com/help/activereports-12/#PageUnboundData.html[DataSetDataSourceサンプル]
+
+==== ActiveReports.Net v12 サンプルプログラム
+下記の場所にサンプルプログラムがあります。
+
+%ProgramFiles(x86)%\ActiveReportsNET12\Samples
+
+Samplesの中の下記のSourceが参考になります。
+
+"Samples\Page Reports And RDL Reports\Data\DataSetDataSource"
