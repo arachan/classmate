@@ -185,7 +185,7 @@
 		<Style />
 	</Body>
 	<BottomMargin>2.5cm</BottomMargin>
-	<Code>Public Function GetDueDate() as Date
+	<Code>Public Function GetDueDate() As Date
 	Return DateTime.Now.AddDays(30)
 End Function
 
